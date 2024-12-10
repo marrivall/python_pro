@@ -12,13 +12,23 @@ storage_file = "students.json"
 LAST_ID_CONTEXT = 2
 
 class StudentsStorage:
-    def __init__(self) -> None:
-        self.students = self.read_json(storage_file) or self.read_csv(file_csv)
+    def __init__(self, file_type: str) -> None:
+        if file_type == 'json':
+            self.students = self.read_json(storage_file)
+        elif file_type == 'csv':
+            self.students = self.read_csv(file_csv, file_type)
+        else:
+            raise Exception (f"Incorrect file type: {file_type}")
 
     @staticmethod
     def read_json(filename: str) -> dict:
-        with open(files_dir / filename) as file:
-            return json.load(file)
+        try:
+            with open(files_dir / filename) as file:
+                return json.load(file)
+        except FileNotFoundError:
+            print(f"file {filename} not found")
+        except Exception as error:
+            print(f"Can't read {filename}: {error}")
 
     @staticmethod
     def write_json(filename: str, data: dict) -> None:
@@ -26,15 +36,20 @@ class StudentsStorage:
             return json.dump(data, file)
 
     @staticmethod
-    def read_csv(filename: str) -> dict:
-        with open(filename, mode="r") as file:
-            reader = csv.DictReader(file)
-            students = {}
-            for row in reader:
-                student_id = row['id']
-                if student_id not in students:
-                    students[student_id] = {"name": row["name"], "marks": row["marks"].split(",")}
-        return students
+    def read_csv(filename: str, file_type: str) -> dict:
+        try:
+            with open(filename, mode="r") as file:
+                reader = csv.DictReader(file)
+                students = {}
+                for row in reader:
+                    student_id = row['id']
+                    if student_id not in students:
+                        students[student_id] = {"name": row["name"], "marks": row["marks"].split(",")}
+            return students
+        except FileNotFoundError:
+            print(f"file {file_type} not found")
+        except Exception as error:
+            print(f"Can't read {file_type}: {error}")
 
     @staticmethod
     def write_csv(filename: str, data: dict) -> None:
@@ -45,22 +60,26 @@ class StudentsStorage:
             for id_, student in data.items():
                 writer.writerow({"id": id_, "name": student["name"], "marks": ",".join(str(mark) for mark in student["marks"])})
 
-    def flush(self) -> None:
-        self.write_json(storage_file, self.students)
-        self.write_csv(file_csv, self.students)
+    def flush(self, file_type) -> None:
+        if file_type == 'json':
+            self.write_json(storage_file, self.students)
+        elif file_type == 'csv':
+            self.write_csv(file_csv, self.students)
+        else:
+            raise Exception (f"Wrong file type: {file_type}")
 
 
-def represent_students():
-    for id_, student in StudentsStorage().students.items():
+def represent_students(file_type):
+    for id_, student in StudentsStorage(file_type).students.items():
         print(f"[{id_}] {student['name']}, marks: {student['marks']}")
 
 
 # ==================================================
 # CRUD (Create Read Update Delete)
 # ==================================================
-def add_student(student: dict) -> dict | None:
+def add_student(student: dict, file_type: str) -> dict | None:
     global LAST_ID_CONTEXT
-    storage = StudentsStorage()
+    storage = StudentsStorage(file_type)
 
     if len(student) != 2:
         return None
@@ -70,29 +89,29 @@ def add_student(student: dict) -> dict | None:
         LAST_ID_CONTEXT += 1
         storage.students[str(LAST_ID_CONTEXT)] = student
 
-    storage.flush()
+    storage.flush(file_type)
     return student
 
 
-def search_student(id_: int) -> dict | None:
-    storage = StudentsStorage()
+def search_student(id_: int, file_type) -> dict | None:
+    storage = StudentsStorage(file_type)
     return storage.students.get(str(id_))
 
 
-def delete_student(id_: int):
-    storage = StudentsStorage()
+def delete_student(id_: int, file_type):
+    storage = StudentsStorage(file_type)
 
-    if search_student(id_):
+    if search_student(id_, file_type):
         del storage.students[str(id_)]
         print(f"Student with id '{id_}' is deleted")
     else:
         print(f"There is student '{id_}' in the storage")
 
 
-def update_student(id_: int, payload: dict) -> dict:
-    storage = StudentsStorage()
+def update_student(id_: int, payload: dict, file_type: str) -> dict:
+    storage = StudentsStorage(file_type)
     storage.students[str(id_)] = payload
-    storage.flush()
+    storage.flush(file_type)
 
     return payload
 
@@ -154,10 +173,16 @@ def ask_student_payload():
 
     return {"name": name, "marks": marks}
 
+def choose_file_type() -> str:
+        file_type = input("Choose file type json or csv: ")
+        if file_type != "json" and file_type != "csv":
+            print ("Invalid file type. Try again")
+        else:
+             return file_type
 
-def handle_management_command(command: str):
+def handle_management_command(command: str, file_type: str):
     if command == "show":
-        represent_students()
+        represent_students(file_type)
 
     elif command == "retrieve":
         search_id = input("Enter student's id to retrieve: ")
@@ -167,7 +192,7 @@ def handle_management_command(command: str):
         except ValueError as error:
             raise Exception(f"ID '{search_id}' is not correct value") from error
         else:
-            if student := search_student(id_):
+            if student := search_student(id_, file_type):
                 student_details(student)
             else:
                 print(f"There is not student with id: '{id_}'")
@@ -180,7 +205,7 @@ def handle_management_command(command: str):
         except ValueError as error:
             raise Exception(f"ID '{delete_id}' is not correct value") from error
         else:
-            delete_student(id_)
+            delete_student(id_, file_type)
 
     elif command == "change":
         update_id = input("Enter student's id you wanna change: ")
@@ -191,9 +216,9 @@ def handle_management_command(command: str):
             raise Exception(f"ID '{update_id}' is not correct value") from error
         else:
             if data := ask_student_payload():
-                update_student(id_, data)
+                update_student(id_, data, file_type)
                 print(f"✅ Student is updated")
-                if student := search_student(id_):
+                if student := search_student(id_, file_type):
                     student_details(student)
                 else:
                     print(f"❌ Can not change user with data {data}")
@@ -203,7 +228,7 @@ def handle_management_command(command: str):
         if data is None:
             return None
         else:
-            if not (student := add_student(data)):
+            if not (student := add_student(data, file_type)):
                 print(f"❌ Can't create user with data: {data}")
             else:
                 print(f"✅ New student '{student['name']}' is created")
@@ -222,8 +247,9 @@ def handle_user_input():
         "Welcome to the Journal application. Use the menu to interact with the application.\n"
         f"Available commands: {AVAILABLE_COMMANDS}"
     )
-
     print(help_message)
+
+    file_type = choose_file_type()
 
     while True:
         command = input("Enter the command: ")
@@ -234,7 +260,7 @@ def handle_user_input():
         elif command == "help":
             print(help_message)
         elif command in MANAGEMENT_COMMANDS:
-            handle_management_command(command=command)
+            handle_management_command(command=command, file_type=file_type)
         else:
             print(f"Unrecognized command '{command}'")
 
