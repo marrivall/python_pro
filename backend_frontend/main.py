@@ -4,7 +4,7 @@ import string
 import time
 import os
 import abc
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 import asyncio
 import httpx
@@ -67,14 +67,14 @@ class ArticleGenerationService(GenerationService):
 
 generation = ArticleGenerationService()
 
-@app.get("/article-ideas")
-async def article_idea():
-    return await generation.generate_random_article_idea()
-
-@app.get("/technical-guide")
-async def technical_guide():
-    return await generation.generate_technical_guide()
-
-@app.get("/fiction")
-async def fiction():
-    return await generation.generate_fiction()
+@app.get("/generate")
+async def generate_inform(type: str):
+    types = {'article':generation.generate_random_article_idea, 
+             'guide': generation.generate_technical_guide, 
+             'fiction': generation.generate_fiction
+            }
+    if type not in types:
+        raise Exception("Invalid type")
+    else:
+        func = types[type]
+        return await func()
