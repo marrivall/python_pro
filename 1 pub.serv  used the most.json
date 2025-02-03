@@ -1,0 +1,10 @@
+[
+  {
+    "service_name": "Healthcare",
+    "usage_count": 2
+  },
+  {
+    "service_name": "Education",
+    "usage_count": 1
+  }
+]

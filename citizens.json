@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Mike Josh",
+    "age": 24,
+    "address": "Train St.",
+    "employment_status": "Employed",
+    "education_level": "Bachelor"
+  },
+  {
+    "id": 2,
+    "name": "Diana Smith",
+    "age": 19,
+    "address": "Times St",
+    "employment_status": "Unemployed",
+    "education_level": "Secondary"
+  },
+  {
+    "id": 3,
+    "name": "Mary Roy",
+    "age": 47,
+    "address": "Saint Val St",
+    "employment_status": "Employed",
+    "education_level": "PhD"
+  }
+]

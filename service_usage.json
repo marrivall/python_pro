@@ -1,0 +1,23 @@
+[
+  {
+    "u_id": 1,
+    "cit_id": 1,
+    "serv_id": 1,
+    "date": "2025-01-15",
+    "frequency": 2
+  },
+  {
+    "u_id": 2,
+    "cit_id": 2,
+    "serv_id": 2,
+    "date": "2023-05-10",
+    "frequency": 1
+  },
+  {
+    "u_id": 3,
+    "cit_id": 3,
+    "serv_id": 1,
+    "date": "2025-02-03",
+    "frequency": 3
+  }
+]

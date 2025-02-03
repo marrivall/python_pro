@@ -1,0 +1,20 @@
+[
+  {
+    "id": 4,
+    "cit_id": 1,
+    "prog_id": 1,
+    "enrollment_data": "Enrolled for scholarship program"
+  },
+  {
+    "id": 5,
+    "cit_id": 2,
+    "prog_id": 2,
+    "enrollment_data": "Housing assistance program, priority for disabled citizens"
+  },
+  {
+    "id": 6,
+    "cit_id": 3,
+    "prog_id": 1,
+    "enrollment_data": "Enrolled for job training program"
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "infrastructure_name": "Bridge",
+    "maintenance_date": "2021-11-30",
+    "scheduled_maintenance_date": "2023-10-01"
+  },
+  {
+    "infrastructure_name": "Hospital",
+    "maintenance_date": "2022-03-15",
+    "scheduled_maintenance_date": "2023-06-15"
+  },
+  {
+    "infrastructure_name": "School",
+    "maintenance_date": "2022-08-10",
+    "scheduled_maintenance_date": "2023-09-10"
+  },
+  {
+    "infrastructure_name": "Park",
+    "maintenance_date": "2023-01-20",
+    "scheduled_maintenance_date": "2023-07-01"
+  },
+  {
+    "infrastructure_name": "Road",
+    "maintenance_date": "2023-05-01",
+    "scheduled_maintenance_date": "2023-12-01"
+  }
+]

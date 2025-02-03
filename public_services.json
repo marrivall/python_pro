@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "service": "Healthcare",
+    "benefits": "Medical treatment and healthcare services"
+  },
+  {
+    "id": 2,
+    "service": "Education",
+    "benefits": "Schooling and educational"
+  },
+  {
+    "id": 3,
+    "service": "Unemployment",
+    "benefits": "Financial assistance for unemployed citizens"
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "type": "Road",
+    "maintenance_date": null,
+    "scheduled_maintenance_date": null
+  },
+  {
+    "id": 2,
+    "type": "Hospital",
+    "maintenance_date": null,
+    "scheduled_maintenance_date": null
+  },
+  {
+    "id": 3,
+    "type": "School",
+    "maintenance_date": null,
+    "scheduled_maintenance_date": null
+  },
+  {
+    "id": 4,
+    "type": "Road",
+    "maintenance_date": "2023-05-01",
+    "scheduled_maintenance_date": "2023-12-01"
+  },
+  {
+    "id": 5,
+    "type": "Hospital",
+    "maintenance_date": "2022-03-15",
+    "scheduled_maintenance_date": "2023-06-15"
+  },
+  {
+    "id": 6,
+    "type": "School",
+    "maintenance_date": "2022-08-10",
+    "scheduled_maintenance_date": "2023-09-10"
+  },
+  {
+    "id": 7,
+    "type": "Bridge",
+    "maintenance_date": "2021-11-30",
+    "scheduled_maintenance_date": "2023-10-01"
+  },
+  {
+    "id": 8,
+    "type": "Park",
+    "maintenance_date": "2023-01-20",
+    "scheduled_maintenance_date": "2023-07-01"
+  }
+]
