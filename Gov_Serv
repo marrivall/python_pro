@@ -1,0 +1,59 @@
+--1. Which public services are used the most?
+SELECT ps.service  AS service_name, COUNT(su.u_id) AS usage_count
+FROM service_usage su
+JOIN public_services ps ON su.serv_id = ps.id
+GROUP BY ps.service;
+
+--2. Which age groups benefit the most from government services?
+SELECT
+    CASE
+        WHEN age BETWEEN 0 AND 17 THEN '0-17'
+        WHEN age BETWEEN 18 AND 35 THEN '18-35'
+        WHEN age BETWEEN 36 AND 50 THEN '36-50'
+        WHEN age BETWEEN 51 AND 65 THEN '51-65'
+        ELSE '65+'
+    END AS age_group,
+    COUNT(c.id) AS service_usage_count
+FROM citizens c
+JOIN service_usage su ON c.id = su.cit_id
+GROUP BY age
+ORDER BY service_usage_count; 
+
+-- 3. Which social programs have the highest participation?
+SELECT sp.program AS program_name, COUNT(pe.id) AS participation_count
+FROM program_enrollment pe
+JOIN social_programs sp ON pe.prog_id = sp.id
+GROUP BY sp.program
+ORDER BY participation_count
+LIMIT 5;
+
+--4. Which government employees handle the most service requests?
+SELECT ge.name AS employee_name, COUNT(su.u_id) AS requests_handled
+FROM service_usage su
+JOIN gov_employees ge ON su.u_id = ge.id 
+GROUP BY ge.name
+ORDER BY requests_handled
+LIMIT 5;
+
+--5. Which infrastructure projects are overdue for maintenance? (_OPTIONAL_)
+SELECT
+	i.type AS infrastructure_name,
+	i.maintenance_date,
+	i.scheduled_maintenance_date
+FROM infrastructure i
+WHERE i.scheduled_maintenance_date < CURRENT_DATE
+AND i.scheduled_maintenance_date > i.maintenance_date
+ORDER BY i.maintenance_date ASC
+
+
+-- **Create a materialized view** to track monthly service usage trends.
+CREATE MATERIALIZED VIEW monthly_serv_trends AS 
+SELECT
+	EXTRACT(YEAR FROM su.date) AS year,
+	EXTRACT(MONTH FROM su.date) AS month,
+	COUNT(su.serv_id) AS track_trends
+FROM service_usage su
+GROUP BY
+	EXTRACT(MONTH FROM su.date)
+ORDER BY month;
+SELECT * FROM monthly_serv_trends; 
